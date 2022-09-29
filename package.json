@@ -1,6 +1,6 @@
 {
-  "name": "@gzuidhof/go-npm",
-  "version": "0.1.13",
+  "name": "@go-task/go-npm",
+  "version": "0.1.14",
   "description": "Distribute and install Go binaries via NPM",
   "main": "index.js",
   "bin": {
@@ -11,13 +11,13 @@
     "build": "rm -rf ./bin && esbuild --bundle src/index.js --outfile=\"./bin/index.js\" --platform=node --target=es6 --minify-whitespace",
     "prepublishOnly": "npm i && npm run build"
   },
-  "author": "Sanath Kumar Ramesh <dayanandasaraswati@gmail.com>",
+  "author": "Andrey Nering",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gzuidhof/go-npm.git"
+    "url": "https://github.com/go-task/go-npm.git"
   },
-  "homepage": "https://github.com/gzuidhof/go-npm",
+  "homepage": "https://github.com/go-task/go-npm",
   "devDependencies": {
     "esbuild": "^0.12.17",
     "jest": "^24.5.0",

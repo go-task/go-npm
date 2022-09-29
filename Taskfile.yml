@@ -1,0 +1,12 @@
+version: '3'
+
+tasks:
+  build:
+    desc: Build project using esbuild
+    cmds:
+      - npm run build
+
+  publish:
+    desc: Publish release to npm
+    cmds:
+      - npm publish --access=public

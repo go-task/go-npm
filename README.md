@@ -1,11 +1,14 @@
 ## Go NPM
 
+### (@go-task): MODIFICATIONS FROM gzuidhof/go-npm FORK
+
+* Added `{{archive_ext}}` to recognize `.zip` packages on Windows and `.tar.gz` on macOS and Linux.
+
 ### (@gzuidhof): MODIFICATIONS FROM BASE `go-npm` PACKAGE
 * Support for zip and non-compressed binaries.
 * Added support for `arm64` architecture.
 * Fix for use on Windows platform (the binary would get placed in the wrong place for consumers).
 * Shipped as a bundle using `esbuild`, removing 70 packages of dependencies (including huge things like Babel). Now your users will only have to download one additional package (`@gzuidhof/go-npm`).
-* Added `{{archive_ext}}` to recognize `.zip` packages on Windows and `.tar.gz` on macOS and Linux.
 
 ### Distribute cross-platform Go binaries via NPM
 
