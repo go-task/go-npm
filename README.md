@@ -58,7 +58,7 @@ Answer the questions to create an initial package.json file
 
 From the directory containing package.json file, do
 
-`$ npm install @gzuidhof/go-npm --save`
+`$ npm install @go-task/go-npm --save`
 
 This will install go-npm under to your package.json file. It will also create a `node_modules` directory where the `go-npm` package is downloaded. You don't need this directory since you are only going to publish the module and not consume it yourself. Let's go ahead and delete it.
 
