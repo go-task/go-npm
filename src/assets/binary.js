@@ -1,5 +1,5 @@
 const { join } = require('path');
-const { chmodSync, copyFileSync, existsSync, unlink } = require('fs');
+const { chmodSync, copyFileSync, existsSync, unlinkSync } = require('fs');
 const { getInstallationPath } = require('../common');
 
 function verifyAndPlaceBinary(binName, binPath, callback) {
@@ -14,7 +14,7 @@ function verifyAndPlaceBinary(binName, binPath, callback) {
 
       // Move the binary file and make sure it is executable
       copyFileSync(join(binPath, binName), join(installationPath, binName));
-      unlink(join(binPath, binName));
+      unlinkSync(join(binPath, binName));
       chmodSync(join(installationPath, binName), '755');
 
       console.log('Placed binary on', join(installationPath, binName));
