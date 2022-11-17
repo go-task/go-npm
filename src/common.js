@@ -35,6 +35,8 @@ function getInstallationPath(callback) {
 
       if (env && env.npm_config_prefix) {
         dir = join(env.npm_config_prefix, 'bin');
+      } else if (env && env.npm_config_local_prefix) {
+        dir = join(env.npm_config_local_prefix, join('node_modules', '.bin'));
       } else {
         return callback(new Error('Error finding binary installation directory'));
       }
