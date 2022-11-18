@@ -5,8 +5,13 @@ tasks:
     desc: Build project using esbuild
     cmds:
       - npm run build
+    sources:
+      - ./src/**/*.js
+      - package.json
+      - package-lock.json
 
   publish:
     desc: Publish release to npm
+    deps: [build]
     cmds:
       - npm publish --access=public
