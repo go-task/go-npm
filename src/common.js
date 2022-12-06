@@ -2,7 +2,7 @@ const { join } = require('path');
 const { exec } = require('child_process');
 const { existsSync, readFileSync } = require('fs');
 const mkdirp = require('mkdirp');
-const usedPM =require('used-pm');
+const usedPM = require('used-pm');
 
 // Mapping from Node's `process.arch` to Golang's `$GOARCH`
 const ARCH_MAPPING = {

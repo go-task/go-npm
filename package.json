@@ -18,15 +18,13 @@
     "url": "https://github.com/go-task/go-npm.git"
   },
   "homepage": "https://github.com/go-task/go-npm",
-  "dependencies": {
-    "used-pm": "^1.0.0"
-  },
   "devDependencies": {
     "esbuild": "^0.12.17",
     "jest": "^24.5.0",
     "mkdirp": "^1.0.4",
     "request": "^2.88.2",
     "tar": "^2.2.2",
-    "unzipper": "0.10.10"
+    "unzipper": "0.10.10",
+    "used-pm": "^1.0.0"
   }
 }
