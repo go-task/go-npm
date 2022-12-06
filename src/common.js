@@ -2,6 +2,7 @@ const { join } = require('path');
 const { exec } = require('child_process');
 const { existsSync, readFileSync } = require('fs');
 const mkdirp = require('mkdirp');
+const usedPM =require('used-pm');
 
 // Mapping from Node's `process.arch` to Golang's `$GOARCH`
 const ARCH_MAPPING = {
@@ -33,10 +34,16 @@ function getInstallationPath(callback) {
       // Ex: /Users/foo/.nvm/versions/node/v4.3.0
       const env = process.env;
 
+      // Get the package manager who is running the script
+      // This is needed since PNPM works in a different way than NPM or YARN.
+      const packageManager = usedPM();
+
       if (env && env.npm_config_prefix) {
         dir = join(env.npm_config_prefix, 'bin');
       } else if (env && env.npm_config_local_prefix) {
         dir = join(env.npm_config_local_prefix, join('node_modules', '.bin'));
+      } else if (packageManager.name.toLowerCase() === 'pnpm') {
+        dir = join(process.cwd(), 'node_modules', '.bin');
       } else {
         return callback(new Error('Error finding binary installation directory'));
       }
