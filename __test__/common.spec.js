@@ -9,16 +9,16 @@ jest.mock('mkdirp');
 
 describe('common', () => {
   describe('getInstallationPath()', () => {
-    let callback, env;
+    let callback, _process;
 
     beforeEach(() => {
       callback = jest.fn();
 
-      env = { ...process.env };
+      _process = { ...global.process, env: { ...process.env } };
     });
 
     afterEach(() => {
-      process.env = env;
+      global.process = _process;
     });
 
     it('should get binaries path from `npm bin`', () => {
@@ -29,9 +29,21 @@ describe('common', () => {
       expect(callback).toHaveBeenCalledWith(null, path.sep + path.join('usr', 'local', 'bin'));
     });
 
-    it('should get binaries path from env', () => {
+    it('should get binaries path from env on windows platform', () => {
       childProcess.exec.mockImplementationOnce((_cmd, cb) => cb(new Error()));
 
+      process.platform = 'win32';
+      process.env.npm_config_prefix = String.raw`C:\Users\John Smith\AppData\npm`;
+
+      common.getInstallationPath(callback);
+
+      expect(callback).toHaveBeenCalledWith(null, path.win32.join('C:', 'Users', 'John Smith', 'AppData', 'npm'));
+    });
+
+    it('should get binaries path from env on platform different than windows', () => {
+      childProcess.exec.mockImplementationOnce((_cmd, cb) => cb(new Error()));
+
+      process.platform = 'linux';
       process.env.npm_config_prefix = '/usr/local';
 
       common.getInstallationPath(callback);

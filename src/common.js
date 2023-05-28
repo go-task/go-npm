@@ -39,7 +39,13 @@ function getInstallationPath(callback) {
       const packageManager = usedPM();
 
       if (env && env.npm_config_prefix) {
-        dir = join(env.npm_config_prefix, 'bin');
+        if (process.platform === 'win32') {
+          // On Windows, use the installation directory itself instead of the `bin` folder.
+          // See: https://docs.npmjs.com/cli/v6/configuring-npm/folders#executables
+          dir = env.npm_config_prefix;
+        } else {
+          dir = join(env.npm_config_prefix, 'bin');
+        }
       } else if (env && env.npm_config_local_prefix) {
         dir = join(env.npm_config_local_prefix, join('node_modules', '.bin'));
       } else if (packageManager.name.toLowerCase() === 'pnpm') {
