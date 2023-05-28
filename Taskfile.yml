@@ -21,6 +21,12 @@ tasks:
     generates:
       - bin/index.js
 
+  test:
+    desc: Run tests
+    deps: [npm:install]
+    cmds:
+      - npm run test
+
   publish:
     desc: Publish release to npm
     deps: [build]
