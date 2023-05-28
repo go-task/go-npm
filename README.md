@@ -6,6 +6,7 @@
 * Fixed error when trying to remove the binary from a previous installation.
 * Add support for local npm prefix ([#1](https://github.com/go-task/go-npm/pull/1)).
 * Added support for [pnpm](https://pnpm.io/) ([#3](https://github.com/go-task/go-npm/pull/3)).
+* Fixed installation path on Windows ([#4](https://github.com/go-task/go-npm/issues/4), [#5](https://github.com/go-task/go-npm/pull/5)).
 
 ### (@gzuidhof): MODIFICATIONS FROM BASE `go-npm` PACKAGE
 * Support for zip and non-compressed binaries.
