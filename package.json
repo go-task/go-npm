@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/go-task/go-npm",
   "devDependencies": {
+    "adm-zip": "0.5.10",
     "esbuild": "^0.12.17",
     "jest": "^24.5.0",
     "mkdirp": "^1.0.4",
