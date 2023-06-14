@@ -60,6 +60,33 @@ describe('common', () => {
 
       expect(callback).toHaveBeenCalledWith(new Error('Error finding binary installation directory'));
     });
+
+    it('should call callback with error if binaries path is not found (avoid bug where npm does not set exit code in Node.js 20)', () => {
+      // In Node.js 20, the behavior of the `process.exit()` function has changed.
+      // As a result, npm 7.19.0 or later does not set the correct exit code on error.
+      // see https://github.com/npm/cli/issues/6399
+      // Therefore, the `child_process.exec()` function will not return an error.
+
+      // This bug was fixed in npm 9.6.7, but not all users are running the latest version of npm.
+      // In particular, in the environment of users using yarn or pnpm,
+      // npm will remain at the old version built into Node.js and will not be updated to the new one.
+      // So the `getInstallationPath()` function also needs to work around this bug.
+
+      childProcess.exec.mockImplementationOnce((_cmd, cb) => cb(
+        null,
+        'Unknown command: "bin"\n\nTo see a list of supported npm commands, run:\n  npm help\n',
+        '',
+      ));
+
+      process.version = 'v20.0.0';
+      process.versions = { ...process.versions, node: '20.0.0' };
+      process.env.npm_config_prefix = undefined;
+      process.env.npm_config_local_prefix = undefined;
+
+      common.getInstallationPath(callback);
+
+      expect(callback).toHaveBeenCalledWith(new Error('Error finding binary installation directory'));
+    });
   });
 
   describe('getUrl', () => {

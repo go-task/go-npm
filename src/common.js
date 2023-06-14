@@ -1,4 +1,4 @@
-const { join } = require('path');
+const { join, isAbsolute } = require('path');
 const { exec } = require('child_process');
 const { existsSync, readFileSync } = require('fs');
 const mkdirp = require('mkdirp');
@@ -26,7 +26,26 @@ function getInstallationPath(callback) {
   exec('npm bin', (err, stdout, stderr) => {
 
     let dir = null;
-    if (err || stderr || !stdout || stdout.length === 0) {
+    if (
+      err
+      || stderr
+      || !stdout
+      || stdout.length === 0
+      // In Node.js 20, the behavior of the `process.exit()` function has changed.
+      // As a result, npm 7.19.0 or later does not set the correct exit code on error.
+      // Therefore, the `child_process.exec()` function will not return an `err`.
+      // See: https://github.com/npm/cli/issues/6399
+      // This bug was fixed in npm 9.6.7, but not all users are running the latest version of npm.
+      // So if `stdout` is not an absolute path in a Node.js 20+ environment,
+      // we treat it as if the `npm bin` command failed.
+      //
+      // Note: The most common failure of the `npm bin` command is the `Unknown command: "bin"` error, but other errors may occur.
+      //       So it is not possible to determine the error from the contents of `stdout`.
+      //       On the other hand, the `npm bin` command will never return a relative path.
+      //       And the error message will never be in the format of an absolute path.
+      //       Therefore, it should be possible to determine the error by determining whether `stdout` is an absolute path.
+      || (Number(process.versions.node.split('.')[0]) >= 20 && !isAbsolute(stdout.trim()))
+    ) {
 
       // We couldn't infer path from `npm bin`. Let's try to get it from
       // Environment variables set by NPM when it runs.
