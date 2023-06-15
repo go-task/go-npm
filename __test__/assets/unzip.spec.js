@@ -77,6 +77,29 @@ function createFileHash(algorithm, filepath) {
   });
 }
 
+/**
+ * Create mock functions `onSuccess` and `onError`, and a Promise object to wait until one of them is called
+ */
+function createCallbacks() {
+  // Note: If `Promise.withResolvers` becomes available in the future, this code can be rewritten using it.
+  //       See: https://github.com/tc39/proposal-promise-with-resolvers
+  /** @type {() => void} */
+  let finishCb;
+  /** @type {Promise<void>} */
+  const waitFinish = new Promise(resolve => {
+    finishCb = resolve;
+  });
+
+  return {
+    onSuccess: jest.fn(() => finishCb()),
+    onError: jest.fn(() => finishCb()),
+    /**
+     * A Promise object to be resolved when onSuccess or onError is called.
+     */
+    waitFinish,
+  };
+}
+
 describe('unzip()', () => {
   /**
    * Get the `Request` object returned by the `request()` function
@@ -136,10 +159,12 @@ describe('unzip()', () => {
       // To test for such bugs, ZIP data is split into 1-byte chunks and passed to unzip.
       new ChunkedDataReadable(TEST_ZIP.data, 1),
     );
+    const { onSuccess, onError, waitFinish } = createCallbacks();
 
-    await new Promise((onSuccess, onError) => {
-      unzip({ opts: { binPath: './bin', binName: 'command' }, req, onSuccess, onError });
-    });
+    unzip({ opts: { binPath: './bin', binName: 'command' }, req, onSuccess, onError });
+
+    await waitFinish;
+
     await expect(createFileHash('sha256', './bin/command'))
       .resolves.toEqual(TEST_ZIP.sha256['command']);
   });
@@ -149,10 +174,13 @@ describe('unzip()', () => {
       'https://example.com/releases/latest.zip',
       TEST_ZIP.data,
     );
+    const { onSuccess, onError, waitFinish } = createCallbacks();
 
-    await expect(new Promise((onSuccess, onError) => {
-      unzip({ opts: { binPath: './bin', binName: 'command' }, req, onSuccess, onError });
-    })).resolves.not.toThrow();
+    unzip({ opts: { binPath: './bin', binName: 'command' }, req, onSuccess, onError });
+
+    await waitFinish;
+
+    expect(onSuccess).toHaveBeenCalled();
   });
 
   it('should call onError with error on unzip error', async () => {
@@ -162,9 +190,12 @@ describe('unzip()', () => {
       // This should cause the unzip process to fail and throw an error.
       Buffer.alloc(0),
     );
+    const { onSuccess, onError, waitFinish } = createCallbacks();
 
-    await expect(new Promise((onSuccess, onError) => {
-      unzip({ opts: { binPath: './bin', binName: 'command' }, req, onSuccess, onError });
-    })).rejects.toThrow();
+    unzip({ opts: { binPath: './bin', binName: 'command' }, req, onSuccess, onError });
+
+    await waitFinish;
+
+    expect(onError).toHaveBeenCalledWith(expect.any(Error));
   });
 });
