@@ -1,6 +1,10 @@
 version: '3'
 
 tasks:
+  default:
+    cmds:
+      - task: test
+
   npm:install:
     desc: Runs npm install
     cmds:
