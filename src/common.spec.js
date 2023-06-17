@@ -22,11 +22,16 @@ describe('common', () => {
     });
 
     it('should get binaries path from `npm bin`', () => {
-      childProcess.exec.mockImplementationOnce((_cmd, cb) => cb(null, path.sep + path.join('usr', 'local', 'bin')));
+      childProcess.exec.mockImplementationOnce((_cmd, cb) =>
+        cb(null, path.sep + path.join('usr', 'local', 'bin'))
+      );
 
       common.getInstallationPath(callback);
 
-      expect(callback).toHaveBeenCalledWith(null, path.sep + path.join('usr', 'local', 'bin'));
+      expect(callback).toHaveBeenCalledWith(
+        null,
+        path.sep + path.join('usr', 'local', 'bin')
+      );
     });
 
     it('should get binaries path from env on windows platform', () => {
@@ -37,7 +42,10 @@ describe('common', () => {
 
       common.getInstallationPath(callback);
 
-      expect(callback).toHaveBeenCalledWith(null, path.win32.join('C:', 'Users', 'John Smith', 'AppData', 'npm'));
+      expect(callback).toHaveBeenCalledWith(
+        null,
+        path.win32.join('C:', 'Users', 'John Smith', 'AppData', 'npm')
+      );
     });
 
     it('should get binaries path from env on platform different than windows', () => {
@@ -48,7 +56,10 @@ describe('common', () => {
 
       common.getInstallationPath(callback);
 
-      expect(callback).toHaveBeenCalledWith(null, path.sep + path.join('usr', 'local', 'bin'));
+      expect(callback).toHaveBeenCalledWith(
+        null,
+        path.sep + path.join('usr', 'local', 'bin')
+      );
     });
 
     it('should call callback with error if binaries path is not found', () => {
@@ -59,7 +70,9 @@ describe('common', () => {
 
       common.getInstallationPath(callback);
 
-      expect(callback).toHaveBeenCalledWith(new Error('Error finding binary installation directory'));
+      expect(callback).toHaveBeenCalledWith(
+        new Error('Error finding binary installation directory')
+      );
     });
 
     it('should call callback with error if binaries path is not found (avoid bug where npm does not set exit code in Node.js 20)', () => {
@@ -73,11 +86,13 @@ describe('common', () => {
       // npm will remain at the old version built into Node.js and will not be updated to the new one.
       // So the `getInstallationPath()` function also needs to work around this bug.
 
-      childProcess.exec.mockImplementationOnce((_cmd, cb) => cb(
-        null,
-        'Unknown command: "bin"\n\nTo see a list of supported npm commands, run:\n  npm help\n',
-        '',
-      ));
+      childProcess.exec.mockImplementationOnce((_cmd, cb) =>
+        cb(
+          null,
+          'Unknown command: "bin"\n\nTo see a list of supported npm commands, run:\n  npm help\n',
+          ''
+        )
+      );
 
       process.version = 'v20.0.0';
       process.versions = { ...process.versions, node: '20.0.0' };
@@ -86,7 +101,9 @@ describe('common', () => {
 
       common.getInstallationPath(callback);
 
-      expect(callback).toHaveBeenCalledWith(new Error('Error finding binary installation directory'));
+      expect(callback).toHaveBeenCalledWith(
+        new Error('Error finding binary installation directory')
+      );
     });
   });
 
@@ -98,45 +115,57 @@ describe('common', () => {
     });
 
     it('should get specific url for current platform', () => {
-      const url = common.getUrl({
-        default: 'http://url.tar.gz',
-        windows: 'http://url.exe.zip'
-      }, { platform: 'win32' });
+      const url = common.getUrl(
+        {
+          default: 'http://url.tar.gz',
+          windows: 'http://url.exe.zip'
+        },
+        { platform: 'win32' }
+      );
 
       expect(url).toEqual('http://url.exe.zip');
     });
 
     it('should get default url for current platform', () => {
-      const url = common.getUrl({
-        default: 'http://url.tar.gz',
-        windows: 'http://url.exe.zip'
-      }, { platform: 'linux' });
+      const url = common.getUrl(
+        {
+          default: 'http://url.tar.gz',
+          windows: 'http://url.exe.zip'
+        },
+        { platform: 'linux' }
+      );
 
       expect(url).toEqual('http://url.tar.gz');
     });
 
     it('should get specific url for current platform and architecture', () => {
-      const url = common.getUrl({
-        default: 'http://url.tar.gz',
-        windows: 'http://url.exe.zip',
-        darwin: {
-          default: 'http://url_darwin.tar.gz',
-          386: 'http://url_darwin_i386.tar.gz'
-        }
-      }, { platform: 'darwin', arch: 'ia32' });
+      const url = common.getUrl(
+        {
+          default: 'http://url.tar.gz',
+          windows: 'http://url.exe.zip',
+          darwin: {
+            default: 'http://url_darwin.tar.gz',
+            386: 'http://url_darwin_i386.tar.gz'
+          }
+        },
+        { platform: 'darwin', arch: 'ia32' }
+      );
 
       expect(url).toEqual('http://url_darwin_i386.tar.gz');
     });
 
     it('should get default url for current platform and architecture', () => {
-      const url = common.getUrl({
-        default: 'http://url.tar.gz',
-        windows: 'http://url.exe.zip',
-        darwin: {
-          default: 'http://url_darwin.tar.gz',
-          386: 'http://url_darwin_i386.tar.gz'
-        }
-      }, { platform: 'darwin', arch: 'amd64' });
+      const url = common.getUrl(
+        {
+          default: 'http://url.tar.gz',
+          windows: 'http://url.exe.zip',
+          darwin: {
+            default: 'http://url_darwin.tar.gz',
+            386: 'http://url_darwin_i386.tar.gz'
+          }
+        },
+        { platform: 'darwin', arch: 'amd64' }
+      );
 
       expect(url).toEqual('http://url_darwin.tar.gz');
     });
@@ -176,14 +205,16 @@ describe('common', () => {
     describe('variable replacement', () => {
       it('should append .exe extension on windows platform', () => {
         fs.existsSync.mockReturnValueOnce(true);
-        fs.readFileSync.mockReturnValueOnce(JSON.stringify({
-          version: '1.0.0',
-          goBinary: {
-            name: 'command',
-            path: './bin',
-            url: 'https://github.com/foo/bar/releases/v{{version}}/assets/command{{win_ext}}'
-          }
-        }));
+        fs.readFileSync.mockReturnValueOnce(
+          JSON.stringify({
+            version: '1.0.0',
+            goBinary: {
+              name: 'command',
+              path: './bin',
+              url: 'https://github.com/foo/bar/releases/v{{version}}/assets/command{{win_ext}}'
+            }
+          })
+        );
 
         process.platform = 'win32';
 
@@ -195,14 +226,16 @@ describe('common', () => {
 
       it('should not append .exe extension on platform different than windows', () => {
         fs.existsSync.mockReturnValueOnce(true);
-        fs.readFileSync.mockReturnValueOnce(JSON.stringify({
-          version: '1.0.0',
-          goBinary: {
-            name: 'command',
-            path: './bin',
-            url: 'https://github.com/foo/bar/releases/v{{version}}/assets/command{{win_ext}}'
-          }
-        }));
+        fs.readFileSync.mockReturnValueOnce(
+          JSON.stringify({
+            version: '1.0.0',
+            goBinary: {
+              name: 'command',
+              path: './bin',
+              url: 'https://github.com/foo/bar/releases/v{{version}}/assets/command{{win_ext}}'
+            }
+          })
+        );
 
         process.platform = 'darwin';
 

@@ -6,11 +6,9 @@ const move = require('../../src/assets/move');
 jest.mock('fs');
 
 describe('move()', () => {
-
   let streamEvents, pipe, onSuccess, onError;
 
   beforeEach(() => {
-
     streamEvents = new EventEmitter();
 
     pipe = jest.fn();
@@ -22,15 +20,25 @@ describe('move()', () => {
   });
 
   it('should download resource to given binPath', () => {
+    move({
+      opts: { binPath: './bin', binName: 'command' },
+      req: { pipe },
+      onSuccess,
+      onError
+    });
 
-    move({ opts: { binPath: './bin', binName: 'command' }, req: { pipe }, onSuccess, onError });
-
-    expect(fs.createWriteStream).toHaveBeenCalledWith(path.join("bin", "command"));
+    expect(fs.createWriteStream).toHaveBeenCalledWith(
+      path.join('bin', 'command')
+    );
   });
 
   it('should call onSuccess on stream closed', () => {
-
-    move({ opts: { binPath: './bin', binName: 'command' }, req: { pipe }, onSuccess, onError });
+    move({
+      opts: { binPath: './bin', binName: 'command' },
+      req: { pipe },
+      onSuccess,
+      onError
+    });
 
     streamEvents.emit('close');
 
@@ -38,10 +46,14 @@ describe('move()', () => {
   });
 
   it('should call onError with error on write stream error', () => {
-
     const error = new Error();
 
-    move({ opts: { binPath: './bin', binName: 'command' }, req: { pipe }, onSuccess, onError });
+    move({
+      opts: { binPath: './bin', binName: 'command' },
+      req: { pipe },
+      onSuccess,
+      onError
+    });
 
     streamEvents.emit('error', error);
 

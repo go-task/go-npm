@@ -17,7 +17,7 @@ describe('cli()', () => {
   });
 
   it('should exit with error if command does not exist', () => {
-    cli({ argv: [ '/usr/local/bin/node', 'index.js', 'command' ], exit });
+    cli({ argv: ['/usr/local/bin/node', 'index.js', 'command'], exit });
 
     expect(exit).toHaveBeenCalledWith(1);
   });
@@ -25,7 +25,7 @@ describe('cli()', () => {
   it('should exit with error if command returns error', () => {
     install.mockImplementationOnce((cb) => cb(new Error()));
 
-    cli({ argv: [ '/usr/local/bin/node', 'index.js', 'install' ], exit });
+    cli({ argv: ['/usr/local/bin/node', 'index.js', 'install'], exit });
 
     expect(exit).toHaveBeenCalledWith(1);
   });
@@ -33,7 +33,7 @@ describe('cli()', () => {
   it('should exit with success if command runs fine', () => {
     install.mockImplementationOnce((cb) => cb(null));
 
-    cli({ argv: [ '/usr/local/bin/node', 'index.js', 'install' ], exit });
+    cli({ argv: ['/usr/local/bin/node', 'index.js', 'install'], exit });
 
     expect(exit).toHaveBeenCalledWith(0);
   });

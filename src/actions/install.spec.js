@@ -17,17 +17,15 @@ jest.mock('../../src/assets/unzip');
 jest.mock('../../src/assets/binary');
 
 describe('install()', () => {
-
   let callback, requestEvents;
 
   beforeEach(() => {
-
     callback = jest.fn();
 
     requestEvents = new EventEmitter();
   });
 
-  it('should call callback with error if package.json did not return value' , () => {
+  it('should call callback with error if package.json did not return value', () => {
     common.parsePackageJson.mockReturnValueOnce(undefined);
 
     install(callback);
@@ -43,7 +41,9 @@ describe('install()', () => {
 
     requestEvents.emit('error');
 
-    expect(callback).toHaveBeenCalledWith('Error downloading from URL: http://url');
+    expect(callback).toHaveBeenCalledWith(
+      'Error downloading from URL: http://url'
+    );
   });
 
   it('should call callback with error on response with status code different than 200', () => {
@@ -54,7 +54,9 @@ describe('install()', () => {
 
     requestEvents.emit('response', { statusCode: 404 });
 
-    expect(callback).toHaveBeenCalledWith('Error downloading binary. HTTP Status Code: 404');
+    expect(callback).toHaveBeenCalledWith(
+      'Error downloading binary. HTTP Status Code: 404'
+    );
   });
 
   it('should pick move strategy if url is an uncompressed binary', () => {
@@ -92,13 +94,21 @@ describe('install()', () => {
 
   it('should call verifyAndPlaceCallback on success', () => {
     request.mockReturnValueOnce(requestEvents);
-    common.parsePackageJson.mockReturnValueOnce({ url: 'http://url', binName: 'command', binPath: './bin' });
+    common.parsePackageJson.mockReturnValueOnce({
+      url: 'http://url',
+      binName: 'command',
+      binPath: './bin'
+    });
     move.mockImplementationOnce(({ onSuccess }) => onSuccess());
 
     install(callback);
 
     requestEvents.emit('response', { statusCode: 200 });
 
-    expect(verifyAndPlaceCallback).toHaveBeenCalledWith('command', './bin', callback);
+    expect(verifyAndPlaceCallback).toHaveBeenCalledWith(
+      'command',
+      './bin',
+      callback
+    );
   });
 });

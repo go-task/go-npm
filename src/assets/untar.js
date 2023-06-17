@@ -8,7 +8,6 @@ const zlib = require('zlib');
  * binary is downloaded into `binPath`. Verify the binary and call it good.
  */
 function untar({ opts, req, onSuccess, onError }) {
-
   const ungz = zlib.createGunzip();
   const untar = tar.Extract({ path: opts.binPath });
 

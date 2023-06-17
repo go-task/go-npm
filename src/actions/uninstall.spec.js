@@ -7,11 +7,9 @@ jest.mock('fs');
 jest.mock('../../src/common');
 
 describe('uninstall()', () => {
-
   let callback;
 
   beforeEach(() => {
-
     callback = jest.fn();
 
     common.parsePackageJson.mockReturnValueOnce({ binName: 'command' });
@@ -28,8 +26,9 @@ describe('uninstall()', () => {
   });
 
   it('should call unlinkSync with binary and installation path', () => {
-
-    common.getInstallationPath.mockImplementationOnce((cb) => cb(null, './bin'));
+    common.getInstallationPath.mockImplementationOnce((cb) =>
+      cb(null, './bin')
+    );
 
     uninstall(callback);
 
@@ -37,8 +36,9 @@ describe('uninstall()', () => {
   });
 
   it('should call callback on success', () => {
-
-    common.getInstallationPath.mockImplementationOnce((cb) => cb(null, './bin'));
+    common.getInstallationPath.mockImplementationOnce((cb) =>
+      cb(null, './bin')
+    );
 
     uninstall(callback);
 
@@ -46,8 +46,9 @@ describe('uninstall()', () => {
   });
 
   it('should call callback regardless of errors on unlink', () => {
-
-    common.getInstallationPath.mockImplementationOnce((cb) => cb(null, './bin'));
+    common.getInstallationPath.mockImplementationOnce((cb) =>
+      cb(null, './bin')
+    );
 
     fs.unlinkSync.mockImplementationOnce(() => {
       throw new Error();

@@ -9,7 +9,6 @@ jest.mock('tar', () => ({
 }));
 
 describe('untar()', () => {
-
   let ungzEvents, untarEvents, pipe, onSuccess, onError;
 
   beforeEach(() => {
@@ -26,15 +25,23 @@ describe('untar()', () => {
   });
 
   it('should download resource and untar to given binPath', () => {
-
-    untar({ opts: { binPath: './bin', binName: 'command' }, req: { pipe }, onSuccess, onError });
+    untar({
+      opts: { binPath: './bin', binName: 'command' },
+      req: { pipe },
+      onSuccess,
+      onError
+    });
 
     expect(tar.Extract).toHaveBeenCalledWith({ path: './bin' });
   });
 
   it('should call onSuccess on untar end', () => {
-
-    untar({ opts: { binPath: './bin', binName: 'command' }, req: { pipe }, onSuccess, onError });
+    untar({
+      opts: { binPath: './bin', binName: 'command' },
+      req: { pipe },
+      onSuccess,
+      onError
+    });
 
     untarEvents.emit('end');
 
@@ -42,10 +49,14 @@ describe('untar()', () => {
   });
 
   it('should call onError with error on ungz error', () => {
-
     const error = new Error();
 
-    untar({ opts: { binPath: './bin', binName: 'command' }, req: { pipe }, onSuccess, onError });
+    untar({
+      opts: { binPath: './bin', binName: 'command' },
+      req: { pipe },
+      onSuccess,
+      onError
+    });
 
     ungzEvents.emit('error', error);
 
@@ -53,10 +64,14 @@ describe('untar()', () => {
   });
 
   it('should call onError with error on untar error', () => {
-
     const error = new Error();
 
-    untar({ opts: { binPath: './bin', binName: 'command' }, req: { pipe }, onSuccess, onError });
+    untar({
+      opts: { binPath: './bin', binName: 'command' },
+      req: { pipe },
+      onSuccess,
+      onError
+    });
 
     untarEvents.emit('error', error);
 

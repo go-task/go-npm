@@ -21,7 +21,7 @@ const AdmZip = require('adm-zip');
  *       In fact, more memory is used to read the file.
  *       For this reason, we use download logic that loads the entire contents of the ZIP file into memory.
  */
-const getBody = req =>
+const getBody = (req) =>
   new Promise((resolve, reject) => {
     /** @type {{ readonly buf: Buffer, readonly reservedByteLength: number, updatedByteLength: number } | null | undefined} */
     let reservedMemory;
@@ -122,7 +122,7 @@ const getBody = req =>
  */
 function unzip({ opts, req, onSuccess, onError }) {
   getBody(req)
-    .then(async zipData => {
+    .then(async (zipData) => {
       const zip = new AdmZip(zipData);
 
       // Extract only the specified binary.

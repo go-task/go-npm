@@ -18,7 +18,9 @@ describe('verifyAndPlaceBinary()', () => {
 
     verifyAndPlaceBinary('command', './bin', callback);
 
-    expect(callback).toHaveBeenCalledWith('Downloaded binary does not contain the binary specified in configuration - command');
+    expect(callback).toHaveBeenCalledWith(
+      'Downloaded binary does not contain the binary specified in configuration - command'
+    );
   });
 
   it('should call callback with error if installation path cannot be found', () => {
@@ -34,7 +36,9 @@ describe('verifyAndPlaceBinary()', () => {
 
   it('should call callback with null on success', () => {
     fs.existsSync.mockReturnValueOnce(true);
-    common.getInstallationPath.mockImplementationOnce((cb) => cb(null, path.sep + path.join('usr', 'local', 'bin')));
+    common.getInstallationPath.mockImplementationOnce((cb) =>
+      cb(null, path.sep + path.join('usr', 'local', 'bin'))
+    );
 
     verifyAndPlaceBinary('command', './bin', callback);
 
@@ -43,10 +47,15 @@ describe('verifyAndPlaceBinary()', () => {
 
   it('should move the binary to installation directory', () => {
     fs.existsSync.mockReturnValueOnce(true);
-    common.getInstallationPath.mockImplementationOnce((cb) => cb(null, path.sep + path.join('usr', 'local', 'bin')));
+    common.getInstallationPath.mockImplementationOnce((cb) =>
+      cb(null, path.sep + path.join('usr', 'local', 'bin'))
+    );
 
     verifyAndPlaceBinary('command', './bin', callback);
 
-    expect(fs.copyFileSync).toHaveBeenCalledWith(path.join('bin', 'command'), path.sep + path.join('usr', 'local', 'bin', 'command'));
+    expect(fs.copyFileSync).toHaveBeenCalledWith(
+      path.join('bin', 'command'),
+      path.sep + path.join('usr', 'local', 'bin', 'command')
+    );
   });
 });

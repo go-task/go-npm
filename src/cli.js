@@ -9,7 +9,9 @@ module.exports = ({ argv, exit }) => {
     const cmd = argv[2];
 
     if (!actions[cmd]) {
-      console.log('Invalid command to go-npm. `install` and `uninstall` are the only supported commands');
+      console.log(
+        'Invalid command to go-npm. `install` and `uninstall` are the only supported commands'
+      );
       exit(1);
     } else {
       actions[cmd]((err) => {
@@ -22,7 +24,9 @@ module.exports = ({ argv, exit }) => {
       });
     }
   } else {
-    console.log('No command supplied. `install` and `uninstall` are the only supported commands');
+    console.log(
+      'No command supplied. `install` and `uninstall` are the only supported commands'
+    );
     exit(1);
   }
 };

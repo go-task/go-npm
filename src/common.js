@@ -21,16 +21,14 @@ const PLATFORM_MAPPING = {
 };
 
 function getInstallationPath(callback) {
-
   // `npm bin` will output the path where binary files should be installed
   exec('npm bin', (err, stdout, stderr) => {
-
     let dir = null;
     if (
-      err
-      || stderr
-      || !stdout
-      || stdout.length === 0
+      err ||
+      stderr ||
+      !stdout ||
+      stdout.length === 0 ||
       // In Node.js 20, the behavior of the `process.exit()` function has changed.
       // As a result, npm 7.19.0 or later does not set the correct exit code on error.
       // Therefore, the `child_process.exec()` function will not return an `err`.
@@ -44,9 +42,9 @@ function getInstallationPath(callback) {
       //       On the other hand, the `npm bin` command will never return a relative path.
       //       And the error message will never be in the format of an absolute path.
       //       Therefore, it should be possible to determine the error by determining whether `stdout` is an absolute path.
-      || (Number(process.versions.node.split('.')[0]) >= 20 && !isAbsolute(stdout.trim()))
+      (Number(process.versions.node.split('.')[0]) >= 20 &&
+        !isAbsolute(stdout.trim()))
     ) {
-
       // We couldn't infer path from `npm bin`. Let's try to get it from
       // Environment variables set by NPM when it runs.
       // npm_config_prefix points to NPM's installation directory where `bin` folder is available
@@ -70,13 +68,18 @@ function getInstallationPath(callback) {
       } else if (packageManager.name.toLowerCase() === 'pnpm') {
         dir = join(process.cwd(), 'node_modules', '.bin');
       } else {
-        return callback(new Error('Error finding binary installation directory'));
+        return callback(
+          new Error('Error finding binary installation directory')
+        );
       }
     } else {
       dir = stdout.trim();
     }
 
-    dir = dir.replace(/node_modules.*[\/\\]\.bin/, join('node_modules', '.bin'));
+    dir = dir.replace(
+      /node_modules.*[\/\\]\.bin/,
+      join('node_modules', '.bin')
+    );
 
     mkdirp.sync(dir);
 
@@ -85,12 +88,11 @@ function getInstallationPath(callback) {
 }
 
 function validateConfiguration({ version, goBinary }) {
-
   if (!version) {
     return "'version' property must be specified";
   }
 
-  if (!goBinary || typeof (goBinary) !== 'object') {
+  if (!goBinary || typeof goBinary !== 'object') {
     return "'goBinary' property must be defined and be an object";
   }
 
@@ -125,7 +127,7 @@ function getUrl(url, process) {
   }
 
   if (_url[ARCH_MAPPING[process.arch]]) {
-    _url = _url[ARCH_MAPPING[process.arch]]
+    _url = _url[ARCH_MAPPING[process.arch]];
   } else {
     _url = _url.default;
   }
@@ -135,20 +137,26 @@ function getUrl(url, process) {
 
 function parsePackageJson() {
   if (!(process.arch in ARCH_MAPPING)) {
-    console.error('Installation is not supported for this architecture: ' + process.arch);
+    console.error(
+      'Installation is not supported for this architecture: ' + process.arch
+    );
     return;
   }
 
   if (!(process.platform in PLATFORM_MAPPING)) {
-    console.error('Installation is not supported for this platform: ' + process.platform);
-    return
+    console.error(
+      'Installation is not supported for this platform: ' + process.platform
+    );
+    return;
   }
 
   const packageJsonPath = join('.', 'package.json');
   if (!existsSync(packageJsonPath)) {
-    console.error('Unable to find package.json. ' +
-      'Please run this script at root of the package you want to be installed');
-    return
+    console.error(
+      'Unable to find package.json. ' +
+        'Please run this script at root of the package you want to be installed'
+    );
+    return;
   }
 
   const packageJson = JSON.parse(readFileSync(packageJsonPath));
@@ -156,7 +164,7 @@ function parsePackageJson() {
 
   if (error && error.length > 0) {
     console.error('Invalid package.json: ' + error);
-    return
+    return;
   }
 
   // We have validated the config. It exists in all its glory
@@ -167,20 +175,20 @@ function parsePackageJson() {
 
   if (!url) {
     console.error('Could not find url matching platform and architecture');
-    return
+    return;
   }
 
-  if (version[0] === 'v') version = version.substr(1);  // strip the 'v' if necessary v0.0.1 => 0.0.1
+  if (version[0] === 'v') version = version.substr(1); // strip the 'v' if necessary v0.0.1 => 0.0.1
 
   // Binary name on Windows has .exe suffix
   if (process.platform === 'win32') {
-    binName += '.exe'
+    binName += '.exe';
 
     url = url.replace(/{{win_ext}}/g, '.exe');
-    url = url.replace(/{{archive_ext}}/g, '.zip')
+    url = url.replace(/{{archive_ext}}/g, '.zip');
   } else {
     url = url.replace(/{{win_ext}}/g, '');
-    url = url.replace(/{{archive_ext}}/g, '.tar.gz')
+    url = url.replace(/{{archive_ext}}/g, '.tar.gz');
   }
 
   // Interpolate variables in URL, if necessary
