@@ -7,7 +7,7 @@
     "go-npm": "./bin/index.js"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --silent",
     "build": "rm -rf ./bin && esbuild --bundle src/index.js --outfile=\"./bin/index.js\" --platform=node --target=es6 --minify-whitespace",
     "prepublishOnly": "npm i && npm run build"
   },
