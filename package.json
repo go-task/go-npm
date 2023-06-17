@@ -1,6 +1,6 @@
 {
   "name": "@go-task/go-npm",
-  "version": "0.1.18",
+  "version": "0.2.0",
   "description": "Distribute and install Go binaries via NPM",
   "main": "index.js",
   "bin": {
