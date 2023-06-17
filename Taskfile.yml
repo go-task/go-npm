@@ -5,37 +5,37 @@ tasks:
     cmds:
       - task: test
 
-  npm:install:
-    desc: Runs npm install
+  yarn:install:
+    desc: Runs yarn install
     cmds:
-      - npm install
+      - yarn install
     sources:
       - package.json
-      - package-lock.json
+      - yarn.lock
 
   build:
     desc: Build project using esbuild
-    deps: [npm:install]
+    deps: [yarn:install]
     cmds:
-      - npm run build
+      - yarn run build
     sources:
       - ./src/**/*.js
       - package.json
-      - package-lock.json
+      - yarn.lock
     generates:
       - bin/index.js
 
   test:
     desc: Run tests
-    deps: [npm:install]
+    deps: [yarn:install]
     cmds:
-      - npm run test
+      - yarn run test
 
   publish:
     desc: Publish release to npm
     deps: [build]
     cmds:
-      - npm publish --access=public
+      - yarn publish --access=public
 
   clean:
     desc: Clean build files
