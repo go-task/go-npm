@@ -55,6 +55,7 @@ describe('common', () => {
       childProcess.exec.mockImplementationOnce((_cmd, cb) => cb(new Error()));
 
       process.env.npm_config_prefix = undefined;
+      process.env.npm_config_local_prefix = undefined;
 
       common.getInstallationPath(callback);
 
