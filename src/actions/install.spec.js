@@ -1,11 +1,11 @@
 const { EventEmitter } = require('events');
 const request = require('request');
-const common = require('../../src/common');
-const install = require('../../src/actions/install');
-const move = require('../../src/assets/move');
-const untar = require('../../src/assets/untar');
-const unzip = require('../../src/assets/unzip');
-const verifyAndPlaceCallback = require('../../src/assets/binary');
+const common = require('../common');
+const install = require('./install');
+const move = require('../assets/move');
+const untar = require('../assets/untar');
+const unzip = require('../assets/unzip');
+const verifyAndPlaceCallback = require('../assets/binary');
 
 jest.mock('fs');
 jest.mock('mkdirp');

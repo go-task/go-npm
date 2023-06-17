@@ -1,6 +1,6 @@
 const fs = require('fs');
-const common = require('../../src/common');
-const verifyAndPlaceBinary = require('../../src/assets/binary');
+const common = require('../common');
+const verifyAndPlaceBinary = require('./binary');
 const path = require('path');
 
 jest.mock('fs');

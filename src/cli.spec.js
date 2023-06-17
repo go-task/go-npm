@@ -1,5 +1,5 @@
-const cli = require('../src/cli');
-const install = require('../src/actions/install');
+const cli = require('./cli');
+const install = require('./actions/install');
 
 jest.mock('../src/actions/install');
 
